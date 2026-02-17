@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import {
-  startups,
+  getStartups, // Changed from startups
   getPromotedStartups,
   getRecentStartups,
   getStartupsByCategory,
@@ -8,34 +8,20 @@ import {
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl
-  const type = searchParams.get("type") // "top" | "recent" | null
-  const category = searchParams.get("category") // category filter
-  const page = parseInt(searchParams.get("page") || "1", 10)
-  const limit = parseInt(searchParams.get("limit") || "10", 10)
+  const category = searchParams.get("category")
+  const type = searchParams.get("type")
 
-  let result = startups
+  let data
 
-  if (type === "top") {
-    result = getPromotedStartups()
+  if (type === "promoted") {
+    data = await getPromotedStartups()
   } else if (type === "recent") {
-    result = getRecentStartups()
+    data = await getRecentStartups()
+  } else if (category && category !== "All") {
+    data = await getStartupsByCategory(category)
+  } else {
+    data = await getStartups() // Use the function here
   }
 
-  if (category && category !== "All") {
-    result = result.filter((s) => s.category === category)
-  }
-
-  const total = result.length
-  const offset = (page - 1) * limit
-  const paginated = result.slice(offset, offset + limit)
-
-  return NextResponse.json({
-    data: paginated,
-    meta: {
-      total,
-      page,
-      limit,
-      totalPages: Math.ceil(total / limit),
-    },
-  })
+  return NextResponse.json(data)
 }
