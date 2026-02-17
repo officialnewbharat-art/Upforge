@@ -14,7 +14,7 @@ import {
   X,
 } from "lucide-react"
 import type { Startup } from "@/lib/data"
-import { startups as initialStartups, categories } from "@/lib/data"
+import { getStartups, categories } from "@/lib/data"
 
 type FormData = Omit<Startup, "id"> & { id?: string }
 
