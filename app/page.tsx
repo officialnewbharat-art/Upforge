@@ -1,13 +1,19 @@
-import { HeroSection } from "@/components/hero-section"
-import { TopStartupsSection } from "@/components/top-startups-section"
-import { RecentStartupsSection } from "@/components/recent-startups-section"
+import { getPromotedStartups, getRecentStartups } from "@/lib/data"
+import { StartupCard } from "@/components/startup-card"
 
-export default function HomePage() {
+export default async function Home() {
+  // Fetch data asynchronously
+  const promotedStartups = await getPromotedStartups()
+  const recentStartups = await getRecentStartups()
+
   return (
     <main>
-      <HeroSection />
-      <TopStartupsSection />
-      <RecentStartupsSection />
+      {/* Ensure you check if startups exist before mapping */}
+      <section>
+        {promotedStartups?.map((startup) => (
+          <StartupCard key={startup.id} startup={startup} />
+        ))}
+      </section>
     </main>
   )
 }
