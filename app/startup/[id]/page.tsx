@@ -1,50 +1,19 @@
-import type { Metadata } from "next"
+import { getStartupById, getStartups } from "@/lib/data" // Changed startups to getStartups
+import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { notFound } from "next/navigation"
-import {
-  ArrowLeft,
-  Calendar,
-  ExternalLink,
-  Globe,
-  Shield,
-  Users,
-} from "lucide-react"
-import { getStartupById, startups } from "@/lib/data"
+import { ExternalLink, Calendar, Users, ArrowLeft, Globe } from "lucide-react"
 
 export async function generateStaticParams() {
+  const startups = await getStartups() // Fetch from Supabase
   return startups.map((startup) => ({
     id: startup.id,
   }))
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}): Promise<Metadata> {
+export default async function StartupPage({ params }: { params: { id: string } }) {
   const { id } = await params
-  const startup = getStartupById(id)
-  if (!startup) return { title: "Startup Not Found" }
-
-  return {
-    title: `${startup.name} - ${startup.category}`,
-    description: startup.description,
-    openGraph: {
-      title: `${startup.name} | UPFORGE`,
-      description: startup.description,
-      images: [startup.imageUrl],
-    },
-  }
-}
-
-export default async function StartupDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params
-  const startup = getStartupById(id)
+  const startup = await getStartupById(id)
 
   if (!startup) {
     notFound()
