@@ -2,7 +2,8 @@ import { getStartupById, getStartups } from "@/lib/data" // Changed startups to 
 import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { ExternalLink, Calendar, Users, ArrowLeft, Globe } from "lucide-react"
+// Add 'Shield' to this line
+import { ExternalLink, Calendar, Users, ArrowLeft, Globe, Shield } from "lucide-react"
 
 export async function generateStaticParams() {
   const startups = await getStartups() // Fetch from Supabase
