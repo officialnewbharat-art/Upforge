@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
 
@@ -10,11 +11,16 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <span className="text-sm font-bold tracking-tight text-primary-foreground">
-              UF
-            </span>
+        <Link href="/" className="flex items-center gap-3">
+          {/* Perfect animated logo using /logo.jpg */}
+          <div className="relative h-10 w-10 overflow-hidden rounded-lg">
+            <Image 
+              src="/logo.jpg" 
+              alt="UPFORGE Logo" 
+              fill 
+              className="object-cover transition-transform duration-500 hover:scale-110 animate-in fade-in zoom-in"
+              priority
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-lg font-bold tracking-tight text-foreground">
@@ -26,7 +32,7 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop nav - Admin link removed for protection */}
         <div className="hidden items-center gap-8 md:flex">
           <Link
             href="/"
@@ -46,12 +52,6 @@ export function SiteHeader() {
           >
             Recent
           </Link>
-          <Link
-            href="/admin"
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Admin
-          </Link>
         </div>
 
         {/* Mobile toggle */}
@@ -69,7 +69,7 @@ export function SiteHeader() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu - Admin link removed for protection */}
       {mobileMenuOpen && (
         <div className="border-t border-border bg-card px-6 py-4 md:hidden">
           <div className="flex flex-col gap-4">
@@ -93,13 +93,6 @@ export function SiteHeader() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Recent
-            </Link>
-            <Link
-              href="/admin"
-              className="rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Admin
             </Link>
           </div>
         </div>
