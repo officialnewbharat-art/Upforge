@@ -17,7 +17,7 @@ export type Startup = {
   updatedBy: string
   isPromoted: boolean
   longDescription: string
-  ratingBadge: string // Added to support the UI badge logic
+  ratingBadge: string // Added to support the badge logic in your UI
 }
 
 export const categories = [
@@ -64,7 +64,7 @@ export async function getPromotedStartups(): Promise<Startup[]> {
   const { data, error } = await supabase
     .from('startups')
     .select('*')
-    // Changed 'isPromoted' to lowercase 'ispromoted' to fix Vercel/Postgres error
+    // Changed to lowercase 'ispromoted' to match DB
     .eq('ispromoted', true) 
 
   if (error || !data) {
