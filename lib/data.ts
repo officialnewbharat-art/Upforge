@@ -211,30 +211,30 @@ export async function getPromotedStartups(): Promise<Startup[]> {
   return data
 }
 
+// Update these functions in lib/data.ts to be safer
+
 export async function getRecentStartups(): Promise<Startup[]> {
   const { data, error } = await supabase
     .from('startups')
     .select('*')
     .order('foundedDate', { ascending: false })
 
-  if (error) {
-    return [...startups].sort(
-      (a, b) => new Date(b.foundedDate).getTime() - new Date(a.foundedDate).getTime()
-    )
+  if (error || !data) {
+    console.error("Error fetching recent startups:", error)
+    return [] // Return empty array instead of null/error to prevent .map errors
   }
   return data
 }
 
-export async function getStartupsByCategory(category: string): Promise<Startup[]> {
-  if (category === "All") return getStartups()
-  
+export async function getPromotedStartups(): Promise<Startup[]> {
   const { data, error } = await supabase
     .from('startups')
     .select('*')
-    .eq('category', category)
+    .eq('isPromoted', true)
 
-  if (error) {
-    return startups.filter((s) => s.category === category)
+  if (error || !data) {
+    console.error("Error fetching promoted startups:", error)
+    return [] // Always return an array
   }
   return data
 }
