@@ -3,23 +3,6 @@ import Link from "next/link"
 import { ExternalLink, Calendar, Users } from "lucide-react"
 import type { Startup } from "@/lib/data"
 
-function BadgeColor({ badge }: { badge: Startup["ratingBadge"] }) {
-  const colors: Record<Startup["ratingBadge"], string> = {
-    Verified: "bg-primary/10 text-primary",
-    Trusted: "bg-accent/10 text-accent",
-    Rising: "bg-[oklch(0.75_0.15_55)] text-[oklch(0.40_0.12_55)]",
-    New: "bg-secondary text-secondary-foreground",
-  }
-
-  return (
-    <span
-      className={`inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${colors[badge]}`}
-    >
-      {badge}
-    </span>
-  )
-}
-
 export function StartupCard({
   startup,
   featured = false,
@@ -31,7 +14,7 @@ export function StartupCard({
     <Link href={`/startup/${startup.id}`} className="group block">
       <article
         className={`flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 ${
-          featured ? "ring-1 ring-primary/10" : ""
+          featured || startup.isPromoted ? "ring-1 ring-primary/10" : ""
         }`}
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
@@ -42,14 +25,12 @@ export function StartupCard({
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          {featured && (
-            <div className="absolute left-3 top-3 rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+          {/* Only showing Featured tag if promoted; all other badges removed */}
+          {(featured || startup.isPromoted) && (
+            <div className="absolute left-3 top-3 rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
               Featured
             </div>
           )}
-          <div className="absolute right-3 top-3">
-            <BadgeColor badge={startup.ratingBadge} />
-          </div>
         </div>
 
         <div className="flex flex-1 flex-col p-5">
@@ -101,7 +82,11 @@ export function StartupCardCompact({ startup }: { startup: Startup }) {
             <h3 className="truncate text-sm font-bold text-foreground group-hover:text-primary">
               {startup.name}
             </h3>
-            <BadgeColor badge={startup.ratingBadge} />
+            {startup.isPromoted && (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                Featured
+              </span>
+            )}
           </div>
           <p className="truncate text-xs text-muted-foreground">
             {startup.description}
@@ -110,7 +95,7 @@ export function StartupCardCompact({ startup }: { startup: Startup }) {
             <span>{startup.category}</span>
             <span className="inline-flex items-center gap-0.5">
               <ExternalLink className="h-3 w-3" />
-              Visit
+              View Details
             </span>
           </div>
         </div>
